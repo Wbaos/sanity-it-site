@@ -5,12 +5,15 @@ export default defineType({
     title: "Services",
     type: "document",
     fields: [
-        // 🏷️ Basic Info
+        //
+        //  BASIC INFO
+        //
         defineField({
             name: "title",
             title: "Title",
             type: "string",
-            validation: (Rule) => Rule.required().min(3).error("Title is required"),
+            validation: (Rule) =>
+                Rule.required().min(3).error("Title is required"),
         }),
 
         defineField({
@@ -35,17 +38,40 @@ export default defineType({
             rows: 3,
         }),
 
-        // 📁 Dynamic Category Reference
+        //
+        // FEATURE FLAGS
+        //
+        defineField({
+            name: "popular",
+            title: "Mark as Popular",
+            type: "boolean",
+            initialValue: false,
+            description: "Enable to feature this service on the homepage",
+        }),
+
+        defineField({
+            name: "icon",
+            title: "Icon (emoji or short text)",
+            type: "string",
+            description: "Example: 💻 📱 🛠️",
+        }),
+
+        //
+        // CATEGORY RELATION
+        //
         defineField({
             name: "category",
             title: "Category",
             type: "reference",
             to: [{ type: "category" }],
-            description: "Select which dropdown section this service belongs to",
+            description:
+                "Select which dropdown section this service belongs to",
             validation: (Rule) => Rule.required(),
         }),
 
-        // 🖼️ Hero Image
+        //
+        // HERO IMAGE
+        //
         defineField({
             name: "image",
             title: "Hero Image",
@@ -53,7 +79,9 @@ export default defineType({
             options: { hotspot: true },
         }),
 
-        // 📋 Details list (for bullet points on the service page)
+        //
+        // DETAILS (bullets)
+        //
         defineField({
             name: "details",
             title: "Details List",
@@ -61,7 +89,9 @@ export default defineType({
             of: [{ type: "string" }],
         }),
 
-        // ❓ FAQs
+        //
+        // FAQs
+        //
         defineField({
             name: "faqs",
             title: "FAQs",
@@ -77,7 +107,9 @@ export default defineType({
             ],
         }),
 
-        // 🌟 Testimonials
+        //
+        // TESTIMONIALS
+        //
         defineField({
             name: "testimonials",
             title: "Testimonials",
@@ -86,9 +118,21 @@ export default defineType({
                 {
                     type: "object",
                     fields: [
-                        defineField({ name: "name", type: "string", title: "Customer Name" }),
-                        defineField({ name: "text", type: "text", title: "Testimonial" }),
-                        defineField({ name: "date", type: "date", title: "Date" }),
+                        defineField({
+                            name: "name",
+                            type: "string",
+                            title: "Customer Name",
+                        }),
+                        defineField({
+                            name: "text",
+                            type: "text",
+                            title: "Testimonial",
+                        }),
+                        defineField({
+                            name: "date",
+                            type: "date",
+                            title: "Date",
+                        }),
                         defineField({
                             name: "rating",
                             type: "number",
@@ -100,36 +144,47 @@ export default defineType({
             ],
         }),
 
-        // 🔗 Parent Service (for subservice nesting)
+        //
+        // PARENT SERVICE (for nesting)
+        //
         defineField({
             name: "parentService",
             title: "Parent Service",
             type: "reference",
             to: [{ type: "service" }],
-            description: "Select a parent service if this is a sub-service",
+            description:
+                "Select a parent service if this is a sub-service",
         }),
 
-        // 🧩 Add-ons / Questions Section
+        //
+        // ADD-ONS / QUESTIONS (dynamic options)
+        //
         defineField({
             name: "questions",
             title: "Add-ons / Questions",
             type: "array",
-            description: "Optional add-ons customers can select during checkout.",
+            description:
+                "Optional add-ons, selectors, or text fields customers can fill during checkout.",
             of: [
                 {
                     type: "object",
                     fields: [
+                        //
+                        // Core identifiers
+                        //
                         defineField({
                             name: "id",
                             title: "ID",
                             type: "string",
                             description: "Unique identifier (no spaces)",
+                            validation: (Rule) => Rule.required(),
                         }),
                         defineField({
                             name: "label",
                             title: "Label",
                             type: "string",
                             description: "Full text displayed to the user",
+                            validation: (Rule) => Rule.required(),
                         }),
                         defineField({
                             name: "shortLabel",
@@ -137,12 +192,74 @@ export default defineType({
                             type: "string",
                             description: "Short name for order summary",
                         }),
+
+                        //
+                        // Question type
+                        //
+                        defineField({
+                            name: "type",
+                            title: "Question Type",
+                            type: "string",
+                            options: {
+                                list: [
+                                    { title: "Checkbox", value: "checkbox" },
+                                    { title: "Select", value: "select" },
+                                    { title: "Text Input", value: "text" },
+                                ],
+                            },
+                            initialValue: "checkbox",
+                            validation: (Rule) => Rule.required(),
+                        }),
+
+                        //
+                        // For "checkbox" type
+                        //
                         defineField({
                             name: "extraCost",
                             title: "Extra Cost ($)",
                             type: "number",
-                            description: "Additional price if selected",
+                            description: "Additional price if selected (checkbox only)",
                             validation: (Rule) => Rule.min(0),
+                            hidden: ({ parent }) => parent?.type !== "checkbox",
+                        }),
+
+                        //
+                        // For "select" type
+                        //
+                        defineField({
+                            name: "options",
+                            title: "Select Options",
+                            type: "array",
+                            of: [
+                                {
+                                    type: "object",
+                                    fields: [
+                                        defineField({
+                                            name: "label",
+                                            title: "Option Label",
+                                            type: "string",
+                                            validation: (Rule) => Rule.required(),
+                                        }),
+                                        defineField({
+                                            name: "extraCost",
+                                            title: "Extra Cost ($)",
+                                            type: "number",
+                                            validation: (Rule) => Rule.min(0),
+                                        }),
+                                    ],
+                                },
+                            ],
+                            hidden: ({ parent }) => parent?.type !== "select",
+                        }),
+
+                        //
+                        // For "text" type
+                        //
+                        defineField({
+                            name: "placeholder",
+                            title: "Placeholder (for text input)",
+                            type: "string",
+                            hidden: ({ parent }) => parent?.type !== "text",
                         }),
                     ],
                 },
