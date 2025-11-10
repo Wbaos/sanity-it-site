@@ -15,16 +15,18 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/vision": "^4.10.3",
+    "@sanity/vision": "^4.14.1",
     "react": "^19.1",
     "react-dom": "^19.1",
-    "sanity": "^4.10.3",
+    "sanity": "^4.14.1",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.2",
     "@types/react": "^19.1",
     "eslint": "^9.28",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.5",
     "typescript": "^5.8"
   },
