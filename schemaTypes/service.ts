@@ -4,9 +4,42 @@ export default defineType({
     name: "service",
     title: "Services",
     type: "document",
+
+    fieldsets: [
+        {
+            name: "status",
+            title: "Service Status",
+            options: { collapsible: false },
+        },
+    ],
+
     fields: [
         //
-        //  BASIC INFO
+        // FEATURE FLAGS
+        //
+        defineField({
+            name: "enabled",
+            title: "Enabled",
+            type: "boolean",
+            initialValue: true,
+            description:
+                "Toggle this to enable or disable this service on the website.",
+            options: { layout: "switch" },
+            fieldset: "status",
+        }),
+
+        defineField({
+            name: "popular",
+            title: "Mark as Popular",
+            type: "boolean",
+            initialValue: false,
+            description: "Enable to feature this service on the homepage.",
+            options: { layout: "switch" },
+            fieldset: "status",
+        }),
+
+        //
+        // BASIC INFO
         //
         defineField({
             name: "title",
@@ -39,21 +72,22 @@ export default defineType({
         }),
 
         //
-        // FEATURE FLAGS
+        // ICON
         //
         defineField({
-            name: "popular",
-            title: "Mark as Popular",
-            type: "boolean",
-            initialValue: false,
-            description: "Enable to feature this service on the homepage",
-        }),
-
-        defineField({
             name: "icon",
-            title: "Icon (emoji or short text)",
-            type: "string",
-            description: "Example: 💻 📱 🛠️",
+            title: "Service Icon",
+            type: "image",
+            description: "Upload an icon or small image for this service.",
+            options: { hotspot: true },
+            fields: [
+                defineField({
+                    name: "alt",
+                    title: "Alt text",
+                    type: "string",
+                    description: "Alternative text for accessibility and SEO",
+                }),
+            ],
         }),
 
         //
@@ -64,8 +98,7 @@ export default defineType({
             title: "Category",
             type: "reference",
             to: [{ type: "category" }],
-            description:
-                "Select which dropdown section this service belongs to",
+            description: "Select which main section this service belongs to.",
             validation: (Rule) => Rule.required(),
         }),
 
@@ -77,10 +110,23 @@ export default defineType({
             title: "Hero Image",
             type: "image",
             options: { hotspot: true },
+            fields: [
+                defineField({
+                    name: "alt",
+                    title: "Alt text",
+                    type: "string",
+                    description:
+                        "Alternative text for accessibility and SEO.",
+                    validation: (Rule) =>
+                        Rule.required().error(
+                            "Alt text helps with accessibility and SEO."
+                        ),
+                }),
+            ],
         }),
 
         //
-        // DETAILS (bullets)
+        // DETAILS
         //
         defineField({
             name: "details",
@@ -118,21 +164,9 @@ export default defineType({
                 {
                     type: "object",
                     fields: [
-                        defineField({
-                            name: "name",
-                            type: "string",
-                            title: "Customer Name",
-                        }),
-                        defineField({
-                            name: "text",
-                            type: "text",
-                            title: "Testimonial",
-                        }),
-                        defineField({
-                            name: "date",
-                            type: "date",
-                            title: "Date",
-                        }),
+                        defineField({ name: "name", type: "string", title: "Customer Name" }),
+                        defineField({ name: "text", type: "text", title: "Testimonial" }),
+                        defineField({ name: "date", type: "date", title: "Date" }),
                         defineField({
                             name: "rating",
                             type: "number",
@@ -145,7 +179,7 @@ export default defineType({
         }),
 
         //
-        // PARENT SERVICE (for nesting)
+        // PARENT SERVICE (for nested hierarchy)
         //
         defineField({
             name: "parentService",
@@ -153,11 +187,11 @@ export default defineType({
             type: "reference",
             to: [{ type: "service" }],
             description:
-                "Select a parent service if this is a sub-service",
+                "If this is a sub-service, select its parent service (e.g., 'Computers'). Leave empty for top-level services.",
         }),
 
         //
-        // ADD-ONS / QUESTIONS (dynamic options)
+        // ADD-ONS / QUESTIONS
         //
         defineField({
             name: "questions",
@@ -168,64 +202,46 @@ export default defineType({
             of: [
                 {
                     type: "object",
+                    title: "Question",
                     fields: [
-                        //
-                        // Core identifiers
-                        //
                         defineField({
                             name: "id",
                             title: "ID",
                             type: "string",
-                            description: "Unique identifier (no spaces)",
                             validation: (Rule) => Rule.required(),
                         }),
                         defineField({
                             name: "label",
-                            title: "Label",
+                            title: "Label (Displayed to User)",
                             type: "string",
-                            description: "Full text displayed to the user",
                             validation: (Rule) => Rule.required(),
                         }),
-                        defineField({
-                            name: "shortLabel",
-                            title: "Short Label",
-                            type: "string",
-                            description: "Short name for order summary",
-                        }),
+                        defineField({ name: "shortLabel", title: "Short Label", type: "string" }),
 
-                        //
-                        // Question type
-                        //
                         defineField({
                             name: "type",
                             title: "Question Type",
                             type: "string",
                             options: {
                                 list: [
-                                    { title: "Checkbox", value: "checkbox" },
-                                    { title: "Select", value: "select" },
+                                    { title: "Checkbox (Add-on)", value: "checkbox" },
+                                    { title: "Select (Dropdown)", value: "select" },
                                     { title: "Text Input", value: "text" },
                                 ],
+                                layout: "radio",
                             },
                             initialValue: "checkbox",
                             validation: (Rule) => Rule.required(),
                         }),
 
-                        //
-                        // For "checkbox" type
-                        //
                         defineField({
                             name: "extraCost",
                             title: "Extra Cost ($)",
                             type: "number",
-                            description: "Additional price if selected (checkbox only)",
                             validation: (Rule) => Rule.min(0),
                             hidden: ({ parent }) => parent?.type !== "checkbox",
                         }),
 
-                        //
-                        // For "select" type
-                        //
                         defineField({
                             name: "options",
                             title: "Select Options",
@@ -252,9 +268,66 @@ export default defineType({
                             hidden: ({ parent }) => parent?.type !== "select",
                         }),
 
-                        //
-                        // For "text" type
-                        //
+                        defineField({
+                            name: "allowOther",
+                            title: "Allow 'Other' Option",
+                            type: "boolean",
+                            initialValue: false,
+                            hidden: ({ parent }) => parent?.type !== "select",
+                        }),
+
+                        defineField({
+                            name: "dependsOn",
+                            title: "Depends On (Parent Question ID)",
+                            type: "string",
+                            description:
+                                "Show this question only when another question has a specific answer (use the parent's ID).",
+                            hidden: ({ parent }) => parent?.type !== "select",
+                        }),
+
+                        defineField({
+                            name: "optionsByParent",
+                            title: "Conditional Options (Dynamic Dropdown)",
+                            type: "array",
+                            of: [
+                                {
+                                    type: "object",
+                                    fields: [
+                                        defineField({
+                                            name: "parentValue",
+                                            title: "Parent Value",
+                                            type: "string",
+                                        }),
+                                        defineField({
+                                            name: "options",
+                                            title: "Options to display when parentValue is selected",
+                                            type: "array",
+                                            of: [
+                                                {
+                                                    type: "object",
+                                                    fields: [
+                                                        defineField({
+                                                            name: "label",
+                                                            title: "Option Label",
+                                                            type: "string",
+                                                            validation: (Rule) => Rule.required(),
+                                                        }),
+                                                        defineField({
+                                                            name: "extraCost",
+                                                            title: "Extra Cost ($)",
+                                                            type: "number",
+                                                            validation: (Rule) => Rule.min(0),
+                                                        }),
+                                                    ],
+                                                },
+                                            ],
+                                        }),
+                                    ],
+                                },
+                            ],
+                            hidden: ({ parent }) => parent?.type !== "select",
+                        }),
+
                         defineField({
                             name: "placeholder",
                             title: "Placeholder (for text input)",
@@ -262,8 +335,52 @@ export default defineType({
                             hidden: ({ parent }) => parent?.type !== "text",
                         }),
                     ],
+
+                    preview: {
+                        select: {
+                            title: "label",
+                            subtitle: "type",
+                        },
+                        prepare({ title, subtitle }) {
+                            const typeLabel =
+                                subtitle === "checkbox"
+                                    ? "Checkbox Add-on"
+                                    : subtitle === "select"
+                                        ? "Select Dropdown"
+                                        : "Text Input";
+                            return {
+                                title: title || "Untitled Question",
+                                subtitle: typeLabel,
+                            };
+                        },
+                    },
                 },
             ],
+            options: { sortable: true },
         }),
     ],
+
+    //
+    // PREVIEW
+    //
+    preview: {
+        select: {
+            title: "title",
+            categoryTitle: "category.title",
+            parentTitle: "parentService.title",
+            media: "icon",
+            price: "price",
+            enabled: "enabled",
+        },
+        prepare({ title, categoryTitle, parentTitle, media, price, enabled }) {
+            const subtitle = parentTitle
+                ? `↳ ${parentTitle} (${categoryTitle})`
+                : categoryTitle || "No category";
+            return {
+                title: `${title} — $${price || 0}`,
+                subtitle: enabled ? `✅ ${subtitle}` : `🚫 ${subtitle}`,
+                media,
+            };
+        },
+    },
 });

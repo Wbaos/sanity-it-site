@@ -9,7 +9,9 @@ export default defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
+      validation: Rule => Rule.required(),
     }),
+
     defineField({
       name: 'slug',
       title: 'Slug',
@@ -18,13 +20,17 @@ export default defineType({
         source: 'title',
         maxLength: 96,
       },
+      validation: Rule => Rule.required(),
     }),
+
     defineField({
       name: 'author',
       title: 'Author',
       type: 'reference',
       to: { type: 'author' },
+      validation: Rule => Rule.required(),
     }),
+
     defineField({
       name: 'mainImage',
       title: 'Main image',
@@ -33,17 +39,36 @@ export default defineType({
         hotspot: true,
       },
     }),
+
     defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',
       of: [{ type: 'reference', to: { type: 'category' } }],
     }),
+
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: "Short keywords (e.g. cloud, migration, support)",
+    }),
+
+    defineField({
+      name: 'excerpt',
+      title: 'Short Description (Excerpt)',
+      type: 'text',
+      rows: 3,
+      description: "Used for blog previews. Shows on the main blog list.",
+    }),
+
     defineField({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
     }),
+
     defineField({
       name: 'body',
       title: 'Body',
@@ -59,7 +84,10 @@ export default defineType({
     },
     prepare(selection) {
       const { author } = selection
-      return { ...selection, subtitle: author && `by ${author}` }
+      return { 
+        ...selection, 
+        subtitle: author && `by ${author}` 
+      }
     },
   },
 })

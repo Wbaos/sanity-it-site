@@ -22,25 +22,50 @@ export default defineType({
 
         defineField({
             name: "price",
-            title: "Price",
+            title: "Monthly Price",
             type: "number",
-            description: "Example: 89 or 19 (do not include the $ symbol)",
+            description: "Example: 19 (do not include the $ symbol)",
             validation: (Rule) => Rule.required().min(1),
         }),
+
+        defineField({
+            name: "annualPrice",
+            title: "Annual Price",
+            type: "number",
+            description:
+                "Discounted yearly total (e.g., 180 for $15/month equivalent).",
+            validation: (Rule) => Rule.required().min(1),
+        }),
+
+        defineField({
+            name: "stripePriceIdMonth",
+            title: "Stripe Monthly Price ID",
+            type: "string",
+            description: "Stripe price ID for the monthly subscription (e.g. price_123)",
+        }),
+        defineField({
+            name: "stripePriceIdYear",
+            title: "Stripe Yearly Price ID",
+            type: "string",
+            description: "Stripe price ID for the yearly subscription (e.g. price_ABC)",
+        }),
+
+
         defineField({
             name: "stripeProductId",
             title: "Stripe Product ID",
             type: "string",
-            description: "The Stripe product ID for this plan (e.g. prod_ABC123)",
-            validation: (Rule) => Rule.required(),
+            description:
+                "The Stripe product ID for this plan (e.g. prod_ABC123). Optional if you only use Sanity pricing.",
         }),
+
         defineField({
             name: "duration",
             title: "Duration",
             type: "string",
-            description: "Example: per month, per year, etc.",
             initialValue: "per month",
         }),
+
         defineField({
             name: "features",
             title: "Features",
@@ -61,29 +86,32 @@ export default defineType({
             type: "string",
             initialValue: "Join Today",
         }),
+
         defineField({
             name: "buttonLink",
             title: "Button Link",
             type: "string",
             initialValue: "#contact",
         }),
+
         defineField({
             name: "featured",
             title: "Featured Plan",
             type: "boolean",
             initialValue: false,
         }),
+
         defineField({
             name: "order",
             title: "Display Order",
             type: "number",
             description: "Lower numbers appear first",
         }),
+
         defineField({
             name: "lastSyncedPrice",
             title: "Last Synced Stripe Price",
             type: "number",
-            description: "Used internally to detect when Sanity price changes",
             readOnly: true,
         }),
     ],
