@@ -4,8 +4,9 @@ import post from './post'
 import author from './author'
 import service from "./service";
 import pricingPlan from "./pricing";
-import { review } from "./review";
+import review from './review';
 import highlights from './highlights';
 import howItWorks from './howItWorks';
+import users from './users';
 
-export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks]
+export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users]
