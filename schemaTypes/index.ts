@@ -8,5 +8,7 @@ import review from './review';
 import highlights from './highlights';
 import howItWorks from './howItWorks';
 import users from './users';
+import serviceCollection from './serviceCollection';
+import promoCode from './promoCode';
 
-export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users]
+export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users, serviceCollection, promoCode]
