@@ -168,7 +168,6 @@ export default defineType({
       to: [{ type: "category" }],
       description: "Which category this service belongs to.",
       validation: (Rule) => Rule.required(),
-      hidden: ({ parent }) => parent?.isSubservice,
     }),
 
     //
