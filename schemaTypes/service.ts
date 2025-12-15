@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import TooltipField from "../components/TooltipField";
 
 export default defineType({
   name: "service",
@@ -47,6 +48,7 @@ export default defineType({
       description: "Feature this service on the homepage.",
       options: { layout: "switch" },
       fieldset: "status",
+      hidden: (ctx: any) => ctx.document?.isSubservice === false,
     }),
 
     //
@@ -93,11 +95,14 @@ export default defineType({
       name: "rating",
       title: "Average Rating",
       type: "number",
-      description: "Average customer rating (1–5 stars).",
-      validation: (Rule) => Rule.min(0).max(5),
-      initialValue: 4.9,
-      hidden: ({ parent }) => !parent?.isSubservice,
-    }),
+      description:
+        "This value represents the total average score customers have given this sub-service.",
+      tooltip:
+        "Calculated as total review score ÷ number of reviews...",
+      validation: (Rule: any) => Rule.min(0).max(5).precision(2),
+      hidden: ({ parent }: { parent: any }) => !parent?.isSubservice,
+      components: { field: TooltipField }
+    } as any),
 
     defineField({
       name: "reviewsCount",
@@ -135,9 +140,7 @@ export default defineType({
         layout: "radio",
       },
       initialValue: "in-home",
-
-      //  Hide this field when NOT a sub-service
-      hidden: ({ document }) => document?.isSubservice === false,
+      hidden: (ctx: any) => ctx.document?.isSubservice === false,
     }),
     //
     // ICONhidden: ({ parent }) => parent?.isSubservice
@@ -146,17 +149,23 @@ export default defineType({
       name: "icon",
       title: "Service Icon",
       type: "image",
-      description: "Upload an icon or small image.",
+      description:
+        "Upload a simple 500×500px SVG icon that clearly represents this service.",
+      tooltip: "This svg will get displayed in the most popular services section.",
+      hidden: (ctx: any) => ctx.document?.isSubservice === false,
       options: { hotspot: true },
+      components: { field: TooltipField },
       fields: [
-        defineField({
+        {
           name: "alt",
           title: "Alt text",
           type: "string",
-          description: "Accessibility and SEO.",
-        }),
+          description: "A short description of what the icon represents.",
+          tooltip: "Use a brief description such as 'Wi-Fi icon'.",
+          components: { field: TooltipField }
+        }
       ],
-    }),
+    } as any),  
 
     //
     // CATEGORY (Top-level items only)
@@ -177,16 +186,23 @@ export default defineType({
       name: "image",
       title: "Hero Image",
       type: "image",
+      description: "Large header image shown at the top of the service page.",
+      tooltip: "Use a high-quality photo (1600px+). Avoid text inside the image for best readability.",
+      hidden: (ctx: any) => ctx.document?.isSubservice === false,
       options: { hotspot: true },
+      components: { field: TooltipField },
       fields: [
-        defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
-    }),
+      defineField({
+        name: "alt",
+        title: "Alt text",
+        type: "string",
+        description: "Short description of what appears in the hero image.",
+        tooltip: "Good for SEO and screen readers. Example: 'Technician installing smart camera'.",
+        validation: (Rule: any) => Rule.required(),
+        components: { field: TooltipField }
+      } as any)
+    ],
+    } as any),
 
     //
     // PROMO BOX (sub-services only)
@@ -195,7 +211,7 @@ export default defineType({
       name: "promo",
       title: "Promo Box",
       type: "object",
-      hidden: ({ parent }) => !parent?.isSubservice,
+      hidden: (ctx: any) => ctx.document?.isSubservice === true,
       fields: [
         defineField({
           name: "enabled",
