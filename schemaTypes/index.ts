@@ -10,5 +10,9 @@ import howItWorks from './howItWorks';
 import users from './users';
 import serviceCollection from './serviceCollection';
 import promoCode from './promoCode';
+import assessmentCategory from './assessmentCategory';
+import assessmentQuestion from './assessmentQuestion';
+import assessmentRecommendation from './assessmentRecommendation';
+import assessmentConfig from './assessmentConfig';
 
-export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users, serviceCollection, promoCode]
+export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users, serviceCollection, promoCode, assessmentCategory, assessmentQuestion, assessmentRecommendation, assessmentConfig]
