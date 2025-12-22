@@ -14,5 +14,6 @@ import assessmentCategory from './assessmentCategory';
 import assessmentQuestion from './assessmentQuestion';
 import assessmentRecommendation from './assessmentRecommendation';
 import assessmentConfig from './assessmentConfig';
+import location from './location';
 
-export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users, serviceCollection, promoCode, assessmentCategory, assessmentQuestion, assessmentRecommendation, assessmentConfig]
+export const schemaTypes = [post, author, category, blockContent, service, pricingPlan, review, highlights, howItWorks, users, serviceCollection, promoCode, assessmentCategory, assessmentQuestion, assessmentRecommendation, assessmentConfig, location]
