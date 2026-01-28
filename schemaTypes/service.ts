@@ -15,18 +15,6 @@ export default defineType({
   ],
 
   fields: [
-    // ------------------------------------------------------------------
-    // TOP-LEVEL FLAG: Is this a sub-service?
-    // ------------------------------------------------------------------
-    defineField({
-      name: "isSubservice",
-      title: "Is Sub-Service?",
-      type: "boolean",
-      initialValue: false,
-      description:
-        "Enable if this service belongs under a parent service and has its own pricing.",
-    }),
-
     //
     // FEATURE FLAGS
     //
@@ -48,7 +36,6 @@ export default defineType({
       description: "Feature this service on the homepage.",
       options: { layout: "switch" },
       fieldset: "status",
-      hidden: (ctx: any) => ctx.document?.isSubservice === false,
     }),
 
     //
@@ -78,17 +65,14 @@ export default defineType({
       title: "Show Price",
       type: "boolean",
       initialValue: true,
-      description: "Show or hide the price.",
       options: { layout: "switch" },
-      hidden: ({ parent }) => !parent?.isSubservice,
     }),
 
     defineField({
       name: "price",
       title: "Base Price ($)",
       type: "number",
-      validation: (Rule) => Rule.min(0),
-      hidden: ({ parent }) => !parent?.isSubservice,
+      validation: (Rule: any) => Rule.required().min(0),
     }),
 
     defineField({
@@ -96,11 +80,10 @@ export default defineType({
       title: "Average Rating",
       type: "number",
       description:
-        "This value represents the total average score customers have given this sub-service.",
+        "This value represents the total average score customers have given this service.",
       tooltip:
         "Calculated as total review score ÷ number of reviews...",
       validation: (Rule: any) => Rule.min(0).max(5).precision(2),
-      hidden: ({ parent }: { parent: any }) => !parent?.isSubservice,
       components: { field: TooltipField }
     } as any),
 
@@ -110,7 +93,6 @@ export default defineType({
       type: "number",
       description: "Total number of reviews.",
       initialValue: 0,
-      hidden: ({ parent }) => !parent?.isSubservice,
     }),
 
     //
@@ -121,6 +103,14 @@ export default defineType({
       title: "Short Description",
       type: "text",
       rows: 3,
+    }),
+    defineField({
+      name: "navDescription",
+      title: "Nav / Group Description",
+      type: "string",
+      description: "Very short description shown in the service group view.",
+      validation: (Rule) =>
+        Rule.max(60).warning("Keep this very short (40–60 characters max)."),
     }),
 
     //
@@ -140,7 +130,6 @@ export default defineType({
         layout: "radio",
       },
       initialValue: "in-home",
-      hidden: (ctx: any) => ctx.document?.isSubservice === false,
     }),
     //
     // ICONhidden: ({ parent }) => parent?.isSubservice
@@ -152,7 +141,6 @@ export default defineType({
       description:
         "Upload a simple 500×500px SVG icon that clearly represents this service.",
       tooltip: "This svg will get displayed in the most popular services section.",
-      hidden: (ctx: any) => ctx.document?.isSubservice === false,
       options: { hotspot: true },
       components: { field: TooltipField },
       fields: [
@@ -165,7 +153,7 @@ export default defineType({
           components: { field: TooltipField }
         }
       ],
-    } as any),  
+    } as any),
 
     //
     // CATEGORY (Top-level items only)
@@ -176,7 +164,16 @@ export default defineType({
       type: "reference",
       to: [{ type: "category" }],
       description: "Which category this service belongs to.",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule: any) => Rule.required(),
+    }),
+
+    defineField({
+      name: "group",
+      title: "Service Group",
+      type: "reference",
+      to: [{ type: "serviceGroup" }],
+      description: "Which group this service belongs to (e.g. TV Mounting, TV Support).",
+      validation: (Rule: any) => Rule.required(),
     }),
 
     //
@@ -188,59 +185,21 @@ export default defineType({
       type: "image",
       description: "Large header image shown at the top of the service page.",
       tooltip: "Use a high-quality photo (1600px+). Avoid text inside the image for best readability.",
-      hidden: (ctx: any) => ctx.document?.isSubservice === false,
       options: { hotspot: true },
       components: { field: TooltipField },
       fields: [
-      defineField({
-        name: "alt",
-        title: "Alt text",
-        type: "string",
-        description: "Short description of what appears in the hero image.",
-        tooltip: "Good for SEO and screen readers. Example: 'Technician installing smart camera'.",
-        validation: (Rule: any) => Rule.required(),
-        components: { field: TooltipField }
-      } as any)
-    ],
+        defineField({
+          name: "alt",
+          title: "Alt text",
+          type: "string",
+          description: "Short description of what appears in the hero image.",
+          tooltip: "Good for SEO and screen readers. Example: 'Technician installing smart camera'.",
+          validation: (Rule: any) => Rule.required(),
+          components: { field: TooltipField }
+        } as any)
+      ],
     } as any),
 
-    //
-    // PROMO BOX (sub-services only)
-    //
-    defineField({
-      name: "promo",
-      title: "Promo Box",
-      type: "object",
-      hidden: (ctx: any) => ctx.document?.isSubservice === true,
-      fields: [
-        defineField({
-          name: "enabled",
-          title: "Enable Promo Box",
-          type: "boolean",
-          initialValue: false,
-        }),
-        defineField({ name: "title", title: "Promo Title", type: "string" }),
-        defineField({ name: "subtitle", title: "Subtitle", type: "string" }),
-        defineField({
-          name: "items",
-          title: "Bullet Points",
-          type: "array",
-          of: [{ type: "string" }],
-        }),
-        defineField({
-          name: "buttonText",
-          title: "Button Text",
-          type: "string",
-          initialValue: "Book Now",
-        }),
-        defineField({
-          name: "icon",
-          title: "Promo Icon",
-          type: "image",
-          fields: [{ name: "alt", type: "string", title: "Alt text" }],
-        }),
-      ],
-    }),
 
     //
     // DETAILS (sub-services only)
@@ -250,7 +209,6 @@ export default defineType({
       title: "What is Included",
       type: "array",
       of: [{ type: "string" }],
-      hidden: ({ parent }) => !parent?.isSubservice,
     }),
 
     //
@@ -260,7 +218,6 @@ export default defineType({
       name: "faqs",
       title: "FAQs",
       type: "array",
-      hidden: ({ parent }) => !parent?.isSubservice,
       of: [
         {
           type: "object",
@@ -279,7 +236,6 @@ export default defineType({
       name: "testimonials",
       title: "Testimonials",
       type: "array",
-      hidden: ({ parent }) => !parent?.isSubservice,
       of: [
         {
           type: "object",
@@ -291,23 +247,14 @@ export default defineType({
               name: "rating",
               type: "number",
               title: "Rating (1–5)",
-              validation: (Rule) => Rule.min(1).max(5),
+              validation: (Rule: any) => Rule.min(1).max(5),
             }),
           ],
         },
       ],
     }),
 
-    //
-    // PARENT SERVICE (only for sub-services)
-    //
-    defineField({
-      name: "parentService",
-      title: "Parent Service",
-      type: "reference",
-      to: [{ type: "service" }],
-      hidden: ({ parent }) => !parent?.isSubservice,
-    }),
+    // Removed parentService field
 
     defineField({
       name: "serviceType",
@@ -320,7 +267,6 @@ export default defineType({
         ],
         layout: "radio",
       },
-      hidden: ({ parent }) => !parent?.isSubservice,
     }),
 
     //
@@ -330,7 +276,6 @@ export default defineType({
       name: "questions",
       title: "Add-ons / Questions",
       type: "array",
-      hidden: ({ parent }) => !parent?.isSubservice,
       description: "Optional add-ons or selections during checkout.",
       of: [
         {
@@ -341,7 +286,7 @@ export default defineType({
               name: "id",
               title: "ID",
               type: "string",
-              validation: (Rule) =>
+              validation: (Rule: any) =>
                 Rule.required()
                   .regex(/^[a-z0-9_-]+$/)
                   .error("Use lowercase letters, numbers, hyphens, or underscores."),
@@ -351,7 +296,7 @@ export default defineType({
               name: "label",
               title: "Label",
               type: "string",
-              validation: (Rule) => Rule.required(),
+              validation: (Rule: any) => Rule.required(),
             }),
 
             defineField({ name: "shortLabel", title: "Short Label", type: "string" }),
@@ -383,15 +328,14 @@ export default defineType({
                 layout: "radio",
               },
               initialValue: "checkbox",
-              validation: (Rule) => Rule.required(),
+              validation: (Rule: any) => Rule.required(),
             }),
 
             defineField({
               name: "extraCost",
               title: "Extra Cost ($)",
               type: "number",
-              validation: (Rule) => Rule.min(0),
-              hidden: ({ parent }) => parent?.type !== "checkbox",
+              validation: (Rule: any) => Rule.min(0),
             }),
 
             defineField({
@@ -406,19 +350,17 @@ export default defineType({
                       name: "label",
                       title: "Option Label",
                       type: "string",
-                      validation: (Rule) => Rule.required(),
+                      validation: (Rule: any) => Rule.required(),
                     }),
                     defineField({
                       name: "extraCost",
                       title: "Extra Cost ($)",
                       type: "number",
-                      validation: (Rule) => Rule.min(0),
+                      validation: (Rule: any) => Rule.min(0),
                     }),
                   ],
                 },
               ],
-              hidden: ({ parent }) =>
-                !["select", "multi-select"].includes(parent?.type),
             }),
 
             defineField({
@@ -426,24 +368,18 @@ export default defineType({
               title: "Allow 'Other' Option",
               type: "boolean",
               initialValue: false,
-              hidden: ({ parent }) =>
-                !["select", "multi-select"].includes(parent?.type),
             }),
 
             defineField({
               name: "dependsOn",
               title: "Depends On (Parent Question ID)",
               type: "string",
-              hidden: ({ parent }) =>
-                !["select", "multi-select"].includes(parent?.type),
             }),
 
             defineField({
               name: "optionsByParent",
               title: "Conditional Options",
               type: "array",
-              hidden: ({ parent }) =>
-                !["select", "multi-select"].includes(parent?.type),
               of: [
                 {
                   type: "object",
@@ -459,12 +395,12 @@ export default defineType({
                             defineField({
                               name: "label",
                               type: "string",
-                              validation: (Rule) => Rule.required(),
+                              validation: (Rule: any) => Rule.required(),
                             }),
                             defineField({
                               name: "extraCost",
                               type: "number",
-                              validation: (Rule) => Rule.min(0),
+                              validation: (Rule: any) => Rule.min(0),
                             }),
                           ],
                         },
@@ -479,7 +415,6 @@ export default defineType({
               name: "placeholder",
               title: "Placeholder",
               type: "string",
-              hidden: ({ parent }) => parent?.type !== "text",
             }),
           ],
 
@@ -510,20 +445,17 @@ export default defineType({
     select: {
       title: "title",
       categoryTitle: "category.title",
-      parentTitle: "parentService.title",
+      groupTitle: "group.title",
       media: "icon",
       price: "price",
       enabled: "enabled",
-      isSubservice: "isSubservice",
     },
-    prepare({ title, categoryTitle, parentTitle, media, price, enabled, isSubservice }) {
-      const subtitle = isSubservice
-        ? `↳ ${parentTitle || "Sub-Service"}`
-        : categoryTitle || "Main Service";
-
+    prepare({ title, categoryTitle, groupTitle, media, price, enabled }) {
       return {
-        title: isSubservice ? `${title} — $${price || 0}` : title,
-        subtitle: enabled ? `✅ ${subtitle}` : `🚫 ${subtitle}`,
+        title: `${title} — $${price}`,
+        subtitle: enabled
+          ? `✅ ${categoryTitle} → ${groupTitle}`
+          : `🚫 ${categoryTitle} → ${groupTitle}`,
         media,
       };
     },
