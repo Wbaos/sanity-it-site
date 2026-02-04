@@ -62,6 +62,32 @@ export default defineType({
       rows: 3,
       description: "Used for blog previews. Shows on the main blog list.",
     }),
+    defineField({
+      name: 'metaTitle',
+      title: 'Meta Title (SEO)',
+      type: 'string',
+      description: 'Title shown on Google search results (50–60 characters).',
+      validation: Rule => Rule.max(60),
+    }),
+
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Description (SEO)',
+      type: 'text',
+      rows: 3,
+      description: 'Short summary for Google results (150–160 characters).',
+      validation: Rule => Rule.max(160),
+    }),
+
+    defineField({
+      name: 'ogImage',
+      title: 'Social Share Image (OG)',
+      type: 'image',
+      description: 'Used when sharing on Facebook, WhatsApp, etc.',
+      options: {
+        hotspot: true,
+      },
+    }),
 
     defineField({
       name: 'publishedAt',

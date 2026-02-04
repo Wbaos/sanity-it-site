@@ -74,7 +74,51 @@ export default defineType({
       type: "number",
       validation: (Rule: any) => Rule.required().min(0),
     }),
+    defineField({
+      name: "pricingModel",
+      title: "Pricing Model",
+      type: "string",
+      options: {
+        list: [
+          { title: "Flat Rate", value: "flat" },
+          { title: "Hourly", value: "hourly" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "flat",
+      validation: (Rule: any) => Rule.required(),
+    }),
+    defineField({
+      name: "hourlyConfig",
+      title: "Hourly Settings",
+      type: "object",
+      hidden: ({ parent }) => parent?.pricingModel !== "hourly",
+      fields: [
+        defineField({
+          name: "minimumHours",
+          title: "Minimum Hours",
+          type: "number",
+          initialValue: 1,
+          validation: (Rule: any) => Rule.min(1),
+        }),
 
+        defineField({
+          name: "maximumHours",
+          title: "Maximum Hours",
+          type: "number",
+          description: "Limit online bookings to avoid overscoping",
+          validation: (Rule: any) => Rule.min(1),
+        }),
+
+        defineField({
+          name: "billingIncrement",
+          title: "Billing Increment (minutes)",
+          type: "number",
+          initialValue: 60,
+          description: "Common values: 30 or 60",
+        }),
+      ],
+    }),
     defineField({
       name: "rating",
       title: "Average Rating",
