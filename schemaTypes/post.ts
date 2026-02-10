@@ -4,7 +4,11 @@ export default defineType({
   name: 'post',
   title: 'Post',
   type: 'document',
+
   fields: [
+    // --------------------
+    // Core Content
+    // --------------------
     defineField({
       name: 'title',
       title: 'Title',
@@ -27,24 +31,61 @@ export default defineType({
       name: 'author',
       title: 'Author',
       type: 'reference',
-      to: { type: 'author' },
+      to: [{ type: 'author' }],
       validation: Rule => Rule.required(),
     }),
 
     defineField({
-      name: 'mainImage',
-      title: 'Main image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
+      validation: Rule => Rule.required(),
     }),
 
+    // --------------------
+    // Images
+    // --------------------
+    defineField({
+      name: 'mainImage',
+      title: 'Main Image',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Required for SEO & accessibility',
+          validation: Rule => Rule.required(),
+        },
+      ],
+    }),
+
+    defineField({
+      name: 'ogImage',
+      title: 'Social Share Image (OG)',
+      type: 'image',
+      description: 'Used for Facebook, WhatsApp, Twitter, etc.',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Required for social & SEO',
+          validation: Rule => Rule.required(),
+        },
+      ],
+    }),
+
+    // --------------------
+    // Taxonomy
+    // --------------------
     defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{ type: 'reference', to: { type: 'category' } }],
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
     }),
 
     defineField({
@@ -52,22 +93,27 @@ export default defineType({
       title: 'Tags',
       type: 'array',
       of: [{ type: 'string' }],
-      description: "Short keywords (e.g. cloud, migration, support)",
+      description: 'Short keywords (e.g. wifi, tv-mounting, senior-tech)',
     }),
 
+    // --------------------
+    // SEO
+    // --------------------
     defineField({
       name: 'excerpt',
-      title: 'Short Description (Excerpt)',
+      title: 'Excerpt / Short Description',
       type: 'text',
       rows: 3,
-      description: "Used for blog previews. Shows on the main blog list.",
+      description: 'Used for blog previews and summaries',
+      validation: Rule => Rule.required().max(160),
     }),
+
     defineField({
       name: 'metaTitle',
       title: 'Meta Title (SEO)',
       type: 'string',
-      description: 'Title shown on Google search results (50–60 characters).',
-      validation: Rule => Rule.max(60),
+      description: '50–60 characters recommended',
+      validation: Rule => Rule.required().max(60),
     }),
 
     defineField({
@@ -75,30 +121,50 @@ export default defineType({
       title: 'Meta Description (SEO)',
       type: 'text',
       rows: 3,
-      description: 'Short summary for Google results (150–160 characters).',
-      validation: Rule => Rule.max(160),
+      description: '150–160 characters recommended',
+      validation: Rule => Rule.required().max(160),
     }),
 
     defineField({
-      name: 'ogImage',
-      title: 'Social Share Image (OG)',
-      type: 'image',
-      description: 'Used when sharing on Facebook, WhatsApp, etc.',
-      options: {
-        hotspot: true,
-      },
+      name: 'focusKeyword',
+      title: 'Primary SEO Keyword',
+      type: 'string',
+      description: 'Main keyword you want this post to rank for',
     }),
 
     defineField({
-      name: 'publishedAt',
-      title: 'Published at',
-      type: 'datetime',
+      name: 'canonicalUrl',
+      title: 'Canonical URL',
+      type: 'url',
+      description: 'Use only if this content exists elsewhere',
     }),
 
+    defineField({
+      name: 'seoNoIndex',
+      title: 'No Index',
+      type: 'boolean',
+      description: 'Prevent search engines from indexing this post',
+      initialValue: false,
+    }),
+
+    // --------------------
+    // Content Body
+    // --------------------
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Body Content',
       type: 'blockContent',
+      validation: Rule => Rule.required(),
+    }),
+
+    // --------------------
+    // UX / Extras
+    // --------------------
+    defineField({
+      name: 'readingTime',
+      title: 'Estimated Reading Time (minutes)',
+      type: 'number',
+      description: 'Optional — improves UX and trust',
     }),
   ],
 
@@ -107,12 +173,15 @@ export default defineType({
       title: 'title',
       author: 'author.name',
       media: 'mainImage',
+      publishedAt: 'publishedAt',
     },
-    prepare(selection) {
-      const { author } = selection
-      return { 
-        ...selection, 
-        subtitle: author && `by ${author}` 
+    prepare({ title, author, media, publishedAt }) {
+      return {
+        title,
+        media,
+        subtitle: `${author || 'Unknown author'} • ${
+          publishedAt ? new Date(publishedAt).toLocaleDateString() : 'Unpublished'
+        }`,
       }
     },
   },
