@@ -72,7 +72,16 @@ export default defineType({
       name: "price",
       title: "Base Price ($)",
       type: "number",
-      validation: (Rule: any) => Rule.required().min(0),
+      validation: (Rule) =>
+        Rule.custom((value, context: any) => {
+          const showPrice = context?.parent?.showPrice;
+
+          if (showPrice && (value === undefined || value === null)) {
+            return "Price is required when 'Show Price' is enabled.";
+          }
+
+          return true;
+        }),
     }),
     defineField({
       name: "pricingModel",
@@ -243,6 +252,99 @@ export default defineType({
         } as any)
       ],
     } as any),
+
+
+    //
+    // BEFORE / AFTER (optional)
+    //
+    defineField({
+      name: "beforeAfter",
+      title: "Before & After",
+      type: "object",
+      description:
+        "Optional before/after comparison section for this service (like the slider in your design).",
+      fields: [
+        defineField({
+          name: "heading",
+          title: "Section Heading",
+          type: "string",
+          initialValue: "Before & After Results",
+        }),
+        defineField({
+          name: "subheading",
+          title: "Section Subheading",
+          type: "string",
+          initialValue: "See the transformation from our recent projects",
+        }),
+        defineField({
+          name: "comparisons",
+          title: "Comparisons",
+          type: "array",
+          of: [
+            {
+              type: "object",
+              name: "beforeAfterComparison",
+              title: "Comparison",
+              fields: [
+                defineField({
+                  name: "title",
+                  title: "Comparison Title",
+                  type: "string",
+                  description:
+                    "Caption shown under the slider (example: 'Living room TV wall mount installation - clean cable management').",
+                  validation: (Rule: any) => Rule.required(),
+                }),
+                defineField({
+                  name: "beforeImage",
+                  title: "Before Image",
+                  type: "image",
+                  options: { hotspot: true },
+                  fields: [
+                    defineField({
+                      name: "alt",
+                      title: "Alt text",
+                      type: "string",
+                      validation: (Rule: any) => Rule.required(),
+                      components: { field: TooltipField },
+                    } as any),
+                  ],
+                } as any),
+                defineField({
+                  name: "afterImage",
+                  title: "After Image",
+                  type: "image",
+                  options: { hotspot: true },
+                  fields: [
+                    defineField({
+                      name: "alt",
+                      title: "Alt text",
+                      type: "string",
+                      validation: (Rule: any) => Rule.required(),
+                      components: { field: TooltipField },
+                    } as any),
+                  ],
+                } as any),
+              ],
+              preview: {
+                select: {
+                  title: "title",
+                  media: "beforeImage",
+                },
+                prepare({ title, media }: any) {
+                  return {
+                    title: title || "Before/After Comparison",
+                    subtitle: "Before → After",
+                    media,
+                  };
+                },
+              },
+            },
+          ],
+          validation: (Rule: any) => Rule.max(20),
+          options: { sortable: true },
+        }),
+      ],
+    }),
 
 
     //
