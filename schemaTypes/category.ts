@@ -142,8 +142,8 @@ export default defineType({
     defineField({
       name: "about",
       title: "About This Service",
-      type: "text",
-      rows: 4,
+      type: "array",
+      of: [{ type: "block" }],
     }),
 
     // WHAT'S INCLUDED (FEATURES)
