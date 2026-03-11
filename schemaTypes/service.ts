@@ -253,6 +253,72 @@ export default defineType({
       ],
     } as any),
 
+    //
+    // GALLERY
+    //
+    defineField({
+      name: "gallery",
+      title: "Gallery",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+              validation: (Rule: any) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+      options: { sortable: true },
+    }),
+
+    defineField({
+      name: "videos",
+      title: "Videos",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "serviceVideo",
+          title: "Video",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string" }),
+            defineField({ name: "caption", title: "Caption", type: "string" }),
+
+            defineField({
+              name: "videoFile",
+              title: "Video File",
+              type: "file",
+              options: { accept: "video/mp4,video/webm" },
+              validation: (Rule: any) => Rule.required(),
+            }),
+
+            defineField({
+              name: "poster",
+              title: "Poster Image",
+              type: "image",
+              options: { hotspot: true },
+              fields: [
+                defineField({
+                  name: "alt",
+                  title: "Alt text",
+                  type: "string",
+                  validation: (Rule: any) => Rule.required(),
+                }),
+              ],
+            }),
+          ],
+          preview: { select: { title: "title", media: "poster" } },
+        },
+      ],
+      options: { sortable: true },
+    }),
+
 
     //
     // BEFORE / AFTER (optional)
