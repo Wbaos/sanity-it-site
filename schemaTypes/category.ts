@@ -253,6 +253,12 @@ export default defineType({
         }),
       ],
     }),
+    defineField({
+      name: "displayOrder",
+      title: "Display Order",
+      type: "number",
+      description: "Controls the order categories appear on the website",
+    }),
   ],
 
   preview: {
