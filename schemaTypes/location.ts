@@ -77,6 +77,13 @@ export default defineType({
       description: 'Areas and neighborhoods covered'
     }),
     defineField({
+      name: 'zipCodes',
+      title: 'ZIP Codes Served',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'ZIP codes covered by this location'
+    }),
+    defineField({
       name: 'testimonials',
       title: 'Featured Testimonials',
       type: 'array',
