@@ -165,6 +165,38 @@ export default defineType({
       validation: (Rule) =>
         Rule.max(60).warning("Keep this very short (40–60 characters max)."),
     }),
+    //
+    // WARRANTY
+    //
+    defineField({
+      name: "warranty",
+      title: "Warranty",
+      type: "string",
+      description:
+        "Warranty offered when CallTechCare performs the work and provides the materials. Example: '1 year'. Leave empty if this service has no warranty.",
+      initialValue: "1 year",
+    }),
+
+    //
+    // SEO
+    //
+    defineField({
+      name: "metaTitle",
+      title: "Meta Title",
+      type: "string",
+      description: "Title shown in Google search results for this service page.",
+      validation: (Rule) =>
+        Rule.max(60).warning("Keep under 60 characters so Google does not cut it off."),
+    }),
+
+    defineField({
+      name: "metaDescription",
+      title: "Meta Description",
+      type: "string",
+      description: "Description shown under the title in Google search results.",
+      validation: (Rule) =>
+        Rule.max(160).warning("Keep under 160 characters so Google does not cut it off."),
+    }),
 
     //
     // SERVICE MODE (Only visible for sub-services)
