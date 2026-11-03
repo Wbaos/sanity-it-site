@@ -680,6 +680,98 @@ export default defineType({
       ],
       options: { sortable: true },
     }),
+    //
+    // SPANISH (ES) — counterparts of the fields rendered by the service
+    // detail template. When an ES field is empty, the website falls back
+    // to the English field. Customer testimonials are intentionally NOT
+    // duplicated here: customer words stay verbatim in English.
+    //
+    defineField({
+      name: "titleEs",
+      title: "Title (Spanish)",
+      type: "string",
+    }),
+
+    defineField({
+      name: "descriptionEs",
+      title: "Short Description (Spanish)",
+      type: "text",
+      rows: 3,
+    }),
+
+    defineField({
+      name: "navDescriptionEs",
+      title: "Nav / Group Description (Spanish)",
+      type: "string",
+      validation: (Rule) =>
+        Rule.max(60).warning("Keep this very short (40–60 characters max)."),
+    }),
+
+    defineField({
+      name: "warrantyEs",
+      title: "Warranty (Spanish)",
+      type: "string",
+      description:
+        "Spanish warranty value, e.g. '1 año'. Shown when CallTechCare performs the work and provides the materials.",
+    }),
+
+    defineField({
+      name: "metaTitleEs",
+      title: "Meta Title (Spanish)",
+      type: "string",
+      validation: (Rule) =>
+        Rule.max(60).warning("Keep under 60 characters so Google does not cut it off."),
+    }),
+
+    defineField({
+      name: "metaDescriptionEs",
+      title: "Meta Description (Spanish)",
+      type: "string",
+      validation: (Rule) =>
+        Rule.max(160).warning("Keep under 160 characters so Google does not cut it off."),
+    }),
+
+    defineField({
+      name: "detailsEs",
+      title: "What is Included (Spanish)",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+
+    defineField({
+      name: "faqsEs",
+      title: "FAQs (Spanish)",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "q", type: "string", title: "Question" }),
+            defineField({ name: "a", type: "text", title: "Answer" }),
+          ],
+        },
+      ],
+    }),
+
+    defineField({
+      name: "beforeAfterEs",
+      title: "Before & After (Spanish)",
+      type: "object",
+      description:
+        "Spanish heading and subheading for the before/after section. Comparison images and titles stay in English.",
+      fields: [
+        defineField({
+          name: "heading",
+          title: "Section Heading (Spanish)",
+          type: "string",
+        }),
+        defineField({
+          name: "subheading",
+          title: "Section Subheading (Spanish)",
+          type: "string",
+        }),
+      ],
+    }),
   ],
 
   // ----------------------------------------------------------------------
