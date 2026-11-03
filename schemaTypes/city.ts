@@ -23,9 +23,9 @@ import { defineField, defineType } from "sanity";
 //   sentence), "short-links" (Aventura: shorter cross-link phrases).
 // - faqsOverride (hub only): the Miami hub has its own 8 FAQs, so it
 //   bypasses the shared + local FAQ composition entirely.
-// - The hub's area paragraph is NOT stored: the template renders it
-//   from the full ordered city list, so the hub can never drift from
-//   the cities it lists.
+// - The hub's area paragraph IS stored (its 30-city list as segments),
+//   like every other city: Miami as plain text, Fort Lauderdale to
+//   /locations/fort-lauderdale, the rest to their city pages.
 
 const faqObject = {
   type: "object",
@@ -181,7 +181,7 @@ export default defineType({
       title: "Area Paragraph Segments",
       type: "array",
       description:
-        "The 'We serve all of…' paragraph as ordered segments. Not used for the hub (rendered from the city list).",
+        "The 'We serve all of…' paragraph as ordered segments. For the hub, the full 30-city list paragraph (Miami as plain text, Fort Lauderdale to /locations/fort-lauderdale).",
       of: [areaSegmentObject],
     }),
 
