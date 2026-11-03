@@ -41,6 +41,13 @@ export default defineType({
         Rule.required().min(2).error("Category title is required."),
     }),
 
+    // TITLE (SPANISH)
+    defineField({
+      name: "titleEs",
+      title: "Title (Spanish)",
+      type: "string",
+    }),
+
     // SLUG
     defineField({
       name: "slug",
