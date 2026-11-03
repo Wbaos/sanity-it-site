@@ -157,6 +157,61 @@ export default defineType({
       validation: Rule => Rule.required(),
     }),
 
+    //
+    // SPANISH (ES) — counterparts of the fields rendered by the blog
+    // templates. When an ES field is empty, the website falls back
+    // to the English field. Image alt texts stay in English, as in
+    // the services lot.
+    //
+    defineField({
+      name: 'titleEs',
+      title: 'Title (Spanish)',
+      type: 'string',
+    }),
+
+    defineField({
+      name: 'excerptEs',
+      title: 'Excerpt / Short Description (Spanish)',
+      type: 'text',
+      rows: 3,
+      description: 'Used for blog previews and summaries',
+      validation: Rule =>
+        Rule.max(160).warning('Keep under 160 characters so Google does not cut it off.'),
+    }),
+
+    defineField({
+      name: 'metaTitleEs',
+      title: 'Meta Title (Spanish)',
+      type: 'string',
+      description: '50–60 characters recommended',
+      validation: Rule =>
+        Rule.max(60).warning('Keep under 60 characters so Google does not cut it off.'),
+    }),
+
+    defineField({
+      name: 'metaDescriptionEs',
+      title: 'Meta Description (Spanish)',
+      type: 'text',
+      rows: 3,
+      description: '150–160 characters recommended',
+      validation: Rule =>
+        Rule.max(160).warning('Keep under 160 characters so Google does not cut it off.'),
+    }),
+
+    defineField({
+      name: 'tagsEs',
+      title: 'Tags (Spanish)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Spanish counterparts of Tags, in the same order',
+    }),
+
+    defineField({
+      name: 'bodyEs',
+      title: 'Body Content (Spanish)',
+      type: 'blockContent',
+    }),
+
     // --------------------
     // UX / Extras
     // --------------------
