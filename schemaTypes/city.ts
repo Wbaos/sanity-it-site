@@ -99,7 +99,7 @@ export default defineType({
       title: "Display Order",
       type: "number",
       description:
-        "Canonical order across sitemap, hub list, footer and schema (0 = Sunrise … 29 = Cutler Bay; Miami hub = 19).",
+        "Canonical order across sitemap, hub list, footer and schema (0 = Sunrise … 29 = Cutler Bay; Miami hub = 23).",
     }),
 
     // GEOGRAPHY
