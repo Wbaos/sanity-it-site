@@ -12,5 +12,7 @@ import promoCode from './promoCode';
 import location from './location';
 import requestQuotePage from './requestQuotePage';
 import city from './city';
+import contactPage from './contactPage';
+import legalPage from './legalPage';
 
-export const schemaTypes = [post, author, category, blockContent, service, review, highlights, howItWorks, users, serviceGroup, promoCode, location, requestQuotePage, city]
+export const schemaTypes = [post, author, category, blockContent, service, review, highlights, howItWorks, users, serviceGroup, promoCode, location, requestQuotePage, city, contactPage, legalPage]
