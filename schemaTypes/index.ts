@@ -14,5 +14,6 @@ import requestQuotePage from './requestQuotePage';
 import city from './city';
 import contactPage from './contactPage';
 import legalPage from './legalPage';
+import homePage from './homePage';
 
-export const schemaTypes = [post, author, category, blockContent, service, review, highlights, howItWorks, users, serviceGroup, promoCode, location, requestQuotePage, city, contactPage, legalPage]
+export const schemaTypes = [post, author, category, blockContent, service, review, highlights, howItWorks, users, serviceGroup, promoCode, location, requestQuotePage, city, contactPage, legalPage, homePage]
