@@ -7,6 +7,42 @@ export default defineType({
 
   fields: [
     defineField({
+      name: 'heroTitle',
+      title: 'Hero Title (Request a Free Inspection)',
+      type: 'string',
+    }),
+    defineField({
+      name: 'heroTitleEs',
+      title: 'Hero Title (Spanish)',
+      type: 'string',
+    }),
+    defineField({
+      name: 'heroSubtitle',
+      title: 'Hero Subtitle',
+      type: 'text',
+      rows: 3,
+    }),
+    defineField({
+      name: 'heroSubtitleEs',
+      title: 'Hero Subtitle (Spanish)',
+      type: 'text',
+      rows: 3,
+    }),
+    defineField({
+      name: 'steps',
+      title: 'How It Works Steps (in order)',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({ name: 'title', type: 'string', title: 'Title' }),
+          defineField({ name: 'titleEs', type: 'string', title: 'Title (Spanish)' }),
+          defineField({ name: 'desc', type: 'text', title: 'Description', rows: 3 }),
+          defineField({ name: 'descEs', type: 'text', title: 'Description (Spanish)', rows: 3 }),
+        ],
+      }],
+    }),
+    defineField({
       name: 'sidebarBenefitsTitle',
       title: 'Sidebar Benefits Title',
       type: 'string',
