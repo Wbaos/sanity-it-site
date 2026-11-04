@@ -42,6 +42,12 @@ export default defineType({
       validation: Rule => Rule.required()
     }),
     defineField({
+      name: 'descriptionEs',
+      title: 'Description (Spanish)',
+      type: 'text',
+      rows: 3
+    }),
+    defineField({
       name: 'metaTitle',
       title: 'SEO Title',
       type: 'string',
@@ -186,6 +192,13 @@ export default defineType({
       type: 'array',
       of: [{ type: 'string' }],
       description: 'List of reasons why customers should choose this location'
+    }),
+    defineField({
+      name: 'whyChooseUsEs',
+      title: 'Why Choose Us (Spanish)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Spanish list of reasons why customers should choose this location'
     }),
     defineField({
     name: 'popularServices',

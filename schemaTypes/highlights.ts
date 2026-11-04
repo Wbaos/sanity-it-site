@@ -43,6 +43,17 @@ export default defineType({
       validation: (Rule) =>
         Rule.required().min(5).error("Description is required."),
     }),
+    defineField({
+      name: "titleEs",
+      title: "Title (Spanish)",
+      type: "string",
+    }),
+    defineField({
+      name: "descEs",
+      title: "Description (Spanish)",
+      type: "text",
+      rows: 2,
+    }),
 
     defineField({
       name: "order",
