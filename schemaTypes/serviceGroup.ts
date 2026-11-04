@@ -67,6 +67,23 @@ export default defineType({
       description: "Optional text shown under the group title",
     }),
 
+    //
+    // SPANISH (ES) — counterparts of the group title and description.
+    // When an ES field is empty, the website falls back to English.
+    //
+    defineField({
+      name: "titleEs",
+      title: "Group Title (Spanish)",
+      type: "string",
+    }),
+
+    defineField({
+      name: "descriptionEs",
+      title: "Group Description (Spanish)",
+      type: "text",
+      rows: 3,
+    }),
+
     defineField({
       name: "order",
       title: "Display Order",
