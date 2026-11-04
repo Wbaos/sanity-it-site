@@ -260,6 +260,146 @@ export default defineType({
         }),
       ],
     }),
+    //
+    // SPANISH (ES) — counterparts of the fields rendered by the category
+    // template. When an ES field is empty, the website falls back
+    // to the English field. Icons stay shared: the ES badge and
+    // why-choose items reuse the English icons unless an ES icon
+    // is uploaded.
+    //
+    defineField({
+      name: "seoTitleEs",
+      title: "SEO Title (Spanish)",
+      type: "string",
+      validation: (Rule) =>
+        Rule.max(60).warning(
+          "Keep SEO title under ~60 characters for best display in search results."
+        ),
+    }),
+
+    defineField({
+      name: "metaDescriptionEs",
+      title: "Meta Description (Spanish)",
+      type: "text",
+      description:
+        "Meta description for search results (keep under ~155 characters).",
+      validation: (Rule) =>
+        Rule.max(155).warning(
+          "Keep meta descriptions concise for search engine visibility."
+        ),
+    }),
+
+    defineField({
+      name: "descriptionEs",
+      title: "Description (Spanish)",
+      type: "text",
+      rows: 3,
+      description:
+        "Brief summary of what kinds of services belong to this category, in Spanish.",
+    }),
+
+    defineField({
+      name: "taglineEs",
+      title: "Tagline (Spanish)",
+      type: "string",
+      description: "Short promotional phrase, in Spanish.",
+      validation: (Rule) => Rule.max(120).warning("Keep tagline concise."),
+    }),
+
+    defineField({
+      name: "aboutEs",
+      title: "About This Service (Spanish)",
+      type: "array",
+      of: [{ type: "block" }],
+    }),
+
+    defineField({
+      name: "featuresEs",
+      title: "What's Included (Spanish)",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+
+    defineField({
+      name: "badgesEs",
+      title: "Badges (Spanish)",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "title", type: "string", title: "Title" },
+            { name: "description", type: "string", title: "Description" },
+            {
+              name: "icon",
+              type: "image",
+              title: "Icon",
+              options: { hotspot: true },
+            },
+          ],
+        },
+      ],
+    }),
+
+    defineField({
+      name: "faqsEs",
+      title: "Frequently Asked Questions (Spanish)",
+      type: "array",
+      description: "Add common customer questions and answers for SEO and rich results, in Spanish.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "question",
+              title: "Question",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "answer",
+              title: "Answer",
+              type: "text",
+              rows: 4,
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
+      ],
+    }),
+
+    defineField({
+      name: "whyChooseEs",
+      title: "Why Choose CallTechCare? (Spanish)",
+      type: "array",
+      description: "Key trust and differentiator points, in Spanish.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "description",
+              title: "Description",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "icon",
+              title: "Icon",
+              type: "image",
+              options: { hotspot: true },
+            },
+          ],
+        },
+      ],
+    }),
+
     defineField({
       name: "displayOrder",
       title: "Display Order",
