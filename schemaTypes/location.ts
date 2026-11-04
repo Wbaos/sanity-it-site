@@ -110,7 +110,8 @@ export default defineType({
         type: 'object',
         fields: [
           { name: 'value', type: 'string', title: 'Value', validation: (Rule: any) => Rule.required() },
-          { name: 'label', type: 'string', title: 'Label', validation: (Rule: any) => Rule.required() }
+          { name: 'label', type: 'string', title: 'Label', validation: (Rule: any) => Rule.required() },
+          { name: 'labelEs', type: 'string', title: 'Label (Spanish)' }
         ],
         preview: {
           select: {
