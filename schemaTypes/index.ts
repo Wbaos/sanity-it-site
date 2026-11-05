@@ -15,5 +15,9 @@ import city from './city';
 import contactPage from './contactPage';
 import legalPage from './legalPage';
 import homePage from './homePage';
+import aboutPage from './aboutPage';
+import faqPage from './faqPage';
+import accessibilityPage from './accessibilityPage';
+import siteSettings from './siteSettings';
 
-export const schemaTypes = [post, author, category, blockContent, service, review, highlights, howItWorks, users, serviceGroup, promoCode, location, requestQuotePage, city, contactPage, legalPage, homePage]
+export const schemaTypes = [post, author, category, blockContent, service, review, highlights, howItWorks, users, serviceGroup, promoCode, location, requestQuotePage, city, contactPage, legalPage, homePage, aboutPage, faqPage, accessibilityPage, siteSettings]
