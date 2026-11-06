@@ -37,6 +37,51 @@ export default defineType({
     defineField({ name: 'hoursWeekendCloses', title: 'Weekend Closes (JSON-LD, HH:MM)', type: 'string' }),
     defineField({ name: 'serviceAreaLine', title: 'Footer Service Area Line', type: 'string' }),
     defineField({ name: 'serviceAreaLineEs', title: 'Footer Service Area Line (Spanish)', type: 'string' }),
+    // Google review summary, shown across the site until the Business
+    // Profile Reviews API is approved. Interim only: once the site reads
+    // the count and rating straight from Google, these fields go away.
+    defineField({
+      name: 'googleRating',
+      title: 'Google Rating (0–5)',
+      type: 'number',
+      description: 'Average Google rating, e.g. 5.0. Interim field — removed once the site reads Google directly.',
+      validation: (Rule) => Rule.min(0).max(5),
+    }),
+    defineField({
+      name: 'googleReviewCount',
+      title: 'Google Review Count',
+      type: 'number',
+      description: 'Total number of Google reviews, e.g. 27. Interim field — removed once the site reads Google directly.',
+      validation: (Rule) => Rule.integer().min(0),
+    }),
+    defineField({
+      name: 'googleReviews',
+      title: 'Google Reviews (manual, interim)',
+      type: 'array',
+      description: 'Review texts copied manually from Google. Interim only — removed once the site reads Google directly.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'name', title: 'Reviewer Name', type: 'string' }),
+            defineField({
+              name: 'rating',
+              title: 'Rating (1–5)',
+              type: 'number',
+              validation: (Rule) => Rule.min(1).max(5),
+            }),
+            defineField({ name: 'text', title: 'Review Text', type: 'text', rows: 3 }),
+            defineField({
+              name: 'date',
+              title: 'Review Date (as shown on Google)',
+              type: 'string',
+              description: 'Relative date exactly as shown on Google, e.g. "a week ago". Never invent a calendar date.',
+            }),
+            defineField({ name: 'verified', title: 'Verified Google Review', type: 'boolean' }),
+          ],
+        },
+      ],
+    }),
   ],
   preview: {
     prepare() {
