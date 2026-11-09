@@ -393,6 +393,13 @@ export default defineType({
                   validation: (Rule: any) => Rule.required(),
                 }),
                 defineField({
+                  name: "titleEs",
+                  title: "Comparison Title (Spanish)",
+                  type: "string",
+                  description:
+                    "Spanish caption shown under the slider on the Spanish page. Falls back to the English title when empty.",
+                }),
+                defineField({
                   name: "beforeImage",
                   title: "Before Image",
                   type: "image",
@@ -758,7 +765,7 @@ export default defineType({
       title: "Before & After (Spanish)",
       type: "object",
       description:
-        "Spanish heading and subheading for the before/after section. Comparison images and titles stay in English.",
+        "Spanish heading and subheading for the before/after section. Each comparison has its own Spanish title (Comparison Title (Spanish)) inside the comparison; the images stay the same in both languages.",
       fields: [
         defineField({
           name: "heading",
