@@ -37,6 +37,59 @@ export default defineType({
     defineField({ name: 'hoursWeekendCloses', title: 'Weekend Closes (JSON-LD, HH:MM)', type: 'string' }),
     defineField({ name: 'serviceAreaLine', title: 'Footer Service Area Line', type: 'string' }),
     defineField({ name: 'serviceAreaLineEs', title: 'Footer Service Area Line (Spanish)', type: 'string' }),
+    // Google reviews, durable copy synced daily from the Business Profile
+    // Reviews API by the website's /api/cron/sync-reviews job. The site
+    // reads ONLY from here, so a Google outage never empties the reviews
+    // on the site — the last good copy keeps showing. Do NOT edit these
+    // fields by hand; the daily sync overwrites them.
+    defineField({
+      name: 'googleRating',
+      title: 'Google Rating (0–5)',
+      type: 'number',
+      description: 'Average Google rating, e.g. 5.0. Synced daily from Google — do not edit by hand.',
+      validation: (Rule) => Rule.min(0).max(5),
+    }),
+    defineField({
+      name: 'googleReviewCount',
+      title: 'Google Review Count',
+      type: 'number',
+      description: 'Total number of Google reviews, e.g. 30. Synced daily from Google — do not edit by hand.',
+      validation: (Rule) => Rule.integer().min(0),
+    }),
+    defineField({
+      name: 'googleReviews',
+      title: 'Google Reviews (synced daily)',
+      type: 'array',
+      description: 'Review texts synced daily from the Google Business Profile Reviews API. Do not edit by hand.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'name', title: 'Reviewer Name', type: 'string' }),
+            defineField({
+              name: 'rating',
+              title: 'Rating (1–5)',
+              type: 'number',
+              validation: (Rule) => Rule.min(1).max(5),
+            }),
+            defineField({ name: 'text', title: 'Review Text', type: 'text', rows: 3 }),
+            defineField({
+              name: 'createTime',
+              title: 'Review Time (RFC3339 from Google)',
+              type: 'string',
+              description: 'The review creation timestamp from Google, e.g. "2026-11-06T09:00:00Z". The site turns it into a relative date ("a week ago") at render, so the shown date stays correct even when the copy is days old.',
+            }),
+            defineField({ name: 'verified', title: 'Verified Google Review', type: 'boolean' }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'googleReviewsUpdatedAt',
+      title: 'Google Reviews Last Synced',
+      type: 'datetime',
+      description: 'When the daily sync last wrote these fields. If this is older than ~48 hours, the sync has failed — check the Vercel function logs for [sync-reviews].',
+    }),
   ],
   preview: {
     prepare() {
