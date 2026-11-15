@@ -185,6 +185,29 @@ export default defineType({
       of: [areaSegmentObject],
     }),
 
+    defineField({
+      name: "extraSections",
+      title: "Extra Sections",
+      type: "array",
+      description:
+        "Optional extra content sections (heading + intro + bullets), shown after the intro and before the lead form. English and Spanish.",
+      of: [
+        {
+          type: "object",
+          name: "extraSection",
+          title: "Extra Section",
+          fields: [
+            defineField({ name: "heading", title: "Heading", type: "string" }),
+            defineField({ name: "headingEs", title: "Heading (Spanish)", type: "string" }),
+            defineField({ name: "intro", title: "Intro", type: "text", rows: 3 }),
+            defineField({ name: "introEs", title: "Intro (Spanish)", type: "text", rows: 3 }),
+            defineField({ name: "items", title: "Bullets", type: "array", of: [{ type: "string" }] }),
+            defineField({ name: "itemsEs", title: "Bullets (Spanish)", type: "array", of: [{ type: "string" }] }),
+          ],
+        },
+      ],
+    }),
+
     // FAQs (ENGLISH)
     defineField({
       name: "localFaqs",
