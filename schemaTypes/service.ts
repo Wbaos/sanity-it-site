@@ -50,6 +50,14 @@ export default defineType({
     }),
 
     defineField({
+      name: "h1",
+      title: "Page Heading (H1)",
+      type: "string",
+      description:
+        "Optional page heading shown as the H1 on the service page. When empty, the website uses the Title plus the location line.",
+    }),
+
+    defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
@@ -697,6 +705,14 @@ export default defineType({
       name: "titleEs",
       title: "Title (Spanish)",
       type: "string",
+    }),
+
+    defineField({
+      name: "h1Es",
+      title: "Page Heading (H1) (Spanish)",
+      type: "string",
+      description:
+        "Spanish H1 for the service page. Falls back to the English H1 when empty.",
     }),
 
     defineField({
